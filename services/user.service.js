@@ -47,7 +47,9 @@ const getUserByEmail = async (email) => {
     try {
         const user = await User.findOne({ email: email });
 
-        return user;
+        if (user) return user;
+
+        throw new ApiError(httpStatus.NOT_FOUND, "User Not Found");
     } catch (err) {
         // console.log("errrrrr", err)
         return err;
