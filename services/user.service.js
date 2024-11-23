@@ -36,23 +36,33 @@ const createUser = async (newUser) => {
         try {
             const newPost = await User.create(newUser);
             return newPost;
-        } catch (err) {
+        } catch (error) {
             // console.log("errrrrr", err)
-            return err;
+            throw new ApiError(
+                httpStatus.INTERNAL_SERVER_ERROR,
+                "Failed to delete bookmark",
+                true,
+                error.stack
+            );
         }
     }
 };
 
 const getUserByEmail = async (email) => {
     try {
-        const user = await User.findOne({ email: email });
+        return await User.findOne({ email: email });
 
-        if (user) return user;
+        // if (user) return user;
 
-        throw new ApiError(httpStatus.NOT_FOUND, "User Not Found");
-    } catch (err) {
+        // throw new ApiError(httpStatus.NOT_FOUND, "User Not Found");
+    } catch (error) {
         // console.log("errrrrr", err)
-        return err;
+        throw new ApiError(
+            httpStatus.INTERNAL_SERVER_ERROR,
+            "Failed to delete bookmark",
+            true,
+            error.stack
+        );
     }
 };
 
