@@ -3,8 +3,6 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 const createBookmark = async (newBookmark) => {
-    const { id, data } = newBookmark;
-
     try {
         await Bookmark.create(newBookmark);
         return await getAllBookmarks();
@@ -18,13 +16,13 @@ const createBookmark = async (newBookmark) => {
     }
 };
 
-const findBookMark = async (id) => {
+const findBookMark = async (tmdb_id) => {
     try {
-        const bookmark = await Bookmark.findOne({ id: id });
+        const bookmark = await Bookmark.findOne({ tmdb_id: tmdb_id });
         if (!bookmark) {
             throw new ApiError(
                 httpStatus.NOT_FOUND,
-                `Bookmark with ID ${id} not found`
+                `Bookmark with TMDB ID ${tmdb_id} not found`
             );
         }
         return bookmark;
@@ -53,15 +51,15 @@ const getAllBookmarks = async () => {
     }
 };
 
-const deleteBookmark = async (id) => {
+const deleteBookmark = async (tmdb_id) => {
     try {
-        const result = await Bookmark.deleteOne({ id: id });
+        const result = await Bookmark.deleteOne({ tmdb_id: tmdb_id });
         if (result.deletedCount > 0) {
             return { success: true, message: "Bookmark deleted successfully" };
         } else {
             throw new ApiError(
                 httpStatus.NOT_FOUND,
-                `Bookmark with ID ${id} not found`
+                `Bookmark with TMDB ID ${tmdb_id} not found`
             );
         }
     } catch (error) {

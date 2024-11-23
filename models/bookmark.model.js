@@ -2,7 +2,7 @@ const { required } = require("joi");
 const mongoose = require("mongoose");
 
 const BookmarkSchema = mongoose.Schema({
-    id: {
+    tmdb_id: {
         type: Number,
         required: true,
     },
