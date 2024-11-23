@@ -1,4 +1,5 @@
 const express = require("express");
+const auth = require("../../middlewares/auth");
 
 const {
     createBookmark,
@@ -8,8 +9,8 @@ const {
 
 const router = express.Router();
 
-router.get("/all", getAllBookmarks);
-router.post("/new", createBookmark);
-router.delete("/:id", deleteBookmark);
+router.get("/all", auth, getAllBookmarks);
+router.post("/new", auth, createBookmark);
+router.delete("/:id", auth, deleteBookmark);
 
 module.exports = router;
