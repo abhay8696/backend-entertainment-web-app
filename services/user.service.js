@@ -26,21 +26,21 @@ const bcrypt = require("bcrypt");
  */
 const createUser = async (newUser) => {
     const { name, email, password } = newUser;
-
+    console.log(newUser);
     // check if email is unique
     const isEmailTaken = await User.isEmailTaken(email);
 
     if (isEmailTaken) {
-        throw new ApiError(httpStatus.OK, "Email already taken");
+        throw new ApiError(httpStatus.CONFLICT, "Email already taken");
     } else {
         try {
             const newPost = await User.create(newUser);
             return newPost;
         } catch (error) {
-            // console.log("errrrrr", err)
+            console.log("errrrrr", error.message);
             throw new ApiError(
                 httpStatus.INTERNAL_SERVER_ERROR,
-                "Failed to delete bookmark",
+                error.message,
                 true,
                 error.stack
             );
@@ -59,7 +59,7 @@ const getUserByEmail = async (email) => {
         // console.log("errrrrr", err)
         throw new ApiError(
             httpStatus.INTERNAL_SERVER_ERROR,
-            "Failed to delete bookmark",
+            error.message,
             true,
             error.stack
         );
