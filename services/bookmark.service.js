@@ -55,7 +55,9 @@ const deleteBookmark = async (tmdb_id) => {
     try {
         const result = await Bookmark.deleteOne({ tmdb_id: tmdb_id });
         if (result.deletedCount > 0) {
-            return { success: true, message: "Bookmark deleted successfully" };
+            let remainingBookmarks = await Bookmark.find();
+
+            return remainingBookmarks;
         } else {
             throw new ApiError(
                 httpStatus.NOT_FOUND,
