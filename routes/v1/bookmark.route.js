@@ -3,14 +3,14 @@ const auth = require("../../middlewares/auth");
 
 const {
     createBookmark,
-    getAllBookmarks,
+    getAllUserBookmarks,
     deleteBookmark,
     findBookMark,
 } = require("../../controllers/bookmark.controller");
 
 const router = express.Router();
 
-router.get("/all", auth, getAllBookmarks);
+router.get("/all", auth, getAllUserBookmarks);
 router.get("/:tmdb_id", auth, findBookMark);
 router.post("/new", auth, createBookmark);
 router.delete("/:id", auth, deleteBookmark);

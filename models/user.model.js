@@ -36,6 +36,12 @@ const UserSchema = mongoose.Schema(
             trim: true,
             // validate: [passwordValidator, 'Password must be at least 8 characters long and contain at least one letter and one number.']
         },
+        bookmarks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Bookmark", // Refers to the Bookmark collection
+            },
+        ],
         createdAt: {
             type: Date,
             default: Date.now(),

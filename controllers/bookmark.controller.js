@@ -3,25 +3,31 @@ const httpStatus = require("http-status");
 const { bookmarkService } = require("../services");
 
 const createBookmark = catchAsync(async (req, res) => {
-    const create = await bookmarkService.createBookmark(req.body);
+    const create = await bookmarkService.createBookmark(req.user._id, req.body);
 
     res.status(httpStatus.CREATED).send(create);
 });
 
 const findBookMark = catchAsync(async (req, res) => {
-    const bookmark = await bookmarkService.findBookMark(req.params.tmdb_id);
+    const bookmark = await bookmarkService.findBookMark(
+        req.user._id,
+        req.params.tmdb_id
+    );
 
     res.send(bookmark);
 });
 
-const getAllBookmarks = catchAsync(async (req, res) => {
-    const all = await bookmarkService.getAllBookmarks();
+const getAllUserBookmarks = catchAsync(async (req, res) => {
+    const all = await bookmarkService.getAllUserBookmarks(req.user._id);
 
     res.send(all);
 });
 
 const deleteBookmark = catchAsync(async (req, res) => {
-    const del = await bookmarkService.deleteBookmark(req.params.id);
+    const del = await bookmarkService.deleteBookmark(
+        req.user._id,
+        req.params.id
+    );
 
     res.send(del);
 });
@@ -29,6 +35,6 @@ const deleteBookmark = catchAsync(async (req, res) => {
 module.exports = {
     createBookmark,
     findBookMark,
-    getAllBookmarks,
+    getAllUserBookmarks,
     deleteBookmark,
 };

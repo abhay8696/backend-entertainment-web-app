@@ -1,11 +1,24 @@
 const { Bookmark } = require("../models/bookmark.model");
+const { User } = require("../models/user.model");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
-const createBookmark = async (newBookmark) => {
+const createBookmark = async (userId, newBookmark) => {
     try {
-        await Bookmark.create(newBookmark);
-        return await getAllBookmarks();
+        const bookmark = await Bookmark.create({
+            ...newBookmark,
+            userId,
+        });
+
+        // update the user's bookmarks array
+        await User.findByIdAndUpdate(userId, {
+            $push: { bookmarks: bookmark._id },
+        });
+
+        //fetch all bookmarks by user
+        const userBookmarks = await Bookmark.find({ userId });
+
+        return userBookmarks;
     } catch (error) {
         throw new ApiError(
             httpStatus.INTERNAL_SERVER_ERROR,
@@ -16,9 +29,9 @@ const createBookmark = async (newBookmark) => {
     }
 };
 
-const findBookMark = async (tmdb_id) => {
+const findBookMark = async (userId, tmdb_id) => {
     try {
-        const bookmark = await Bookmark.findOne({ tmdb_id: tmdb_id });
+        const bookmark = await Bookmark.findOne({ tmdb_id, userId });
         if (!bookmark) {
             throw new ApiError(
                 httpStatus.NOT_FOUND,
@@ -37,9 +50,9 @@ const findBookMark = async (tmdb_id) => {
     }
 };
 
-const getAllBookmarks = async () => {
+const getAllUserBookmarks = async (userId) => {
     try {
-        const allBookmarks = await Bookmark.find();
+        const allBookmarks = await Bookmark.find({ userId });
         return allBookmarks;
     } catch (error) {
         throw new ApiError(
@@ -51,11 +64,11 @@ const getAllBookmarks = async () => {
     }
 };
 
-const deleteBookmark = async (tmdb_id) => {
+const deleteBookmark = async (userId, tmdb_id) => {
     try {
-        const result = await Bookmark.deleteOne({ tmdb_id: tmdb_id });
+        const result = await Bookmark.deleteOne({ tmdb_id, userId });
         if (result.deletedCount > 0) {
-            let remainingBookmarks = await Bookmark.find();
+            let remainingBookmarks = await Bookmark.find({ userId });
 
             return remainingBookmarks;
         } else {
@@ -78,6 +91,6 @@ const deleteBookmark = async (tmdb_id) => {
 module.exports = {
     createBookmark,
     findBookMark,
-    getAllBookmarks,
+    getAllUserBookmarks,
     deleteBookmark,
 };

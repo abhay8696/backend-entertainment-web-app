@@ -10,6 +10,11 @@ const BookmarkSchema = mongoose.Schema({
         type: mongoose.Schema.Types.Mixed, // Allows an arbitrary object
         required: true,
     },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // Refers to the User collection
+        required: true,
+    },
 });
 
 const Bookmark = mongoose.model("Bookmark", BookmarkSchema);
